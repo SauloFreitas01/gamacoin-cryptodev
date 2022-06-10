@@ -36,7 +36,10 @@ contract CryptoToken is IERC20 {
     }
 
     //Public Functions
-  
+    function ownerAddress() public view returns (address){
+        return owner;
+    }
+
     function totalSupply() public override view returns(uint256) {
         return totalsupply;
     }
