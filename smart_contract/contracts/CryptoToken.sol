@@ -5,7 +5,7 @@ import "hardhat/console.sol";
 
 interface IERC20 {
 
-    //function totalSupply() external view returns (uint256);
+    function totalSupply() external view returns (uint256);
 	function balanceOf(address _owner) external view returns (uint256 balance);
 	function transfer(address _to, uint256 _value) external returns (bool success);
 	function allowance(address _owner, address _spender) external view returns (uint256 remaining);
@@ -37,6 +37,11 @@ contract CryptoToken is IERC20 {
 
     //Public Functions
   
+    function totalSupply() public override view returns(uint256) {
+        return totalsupply;
+    }
+
+
     function balanceOf(address _owner) public view override returns (uint256 balance){
 		return addressToBalance[_owner];
 	}

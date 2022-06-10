@@ -16,11 +16,11 @@ describe("CryptoToken erc20 tests", function () {
       it('should give the tokens to the owner and', async ()=>{
         const ownerBalance = await cryptoToken.balanceOf(owner.address);
 
-        expect(await crypto.totalSupply()).to.equal(ownerBalance);
+        expect(await cryptoToken.totalSupply()).to.equal(ownerBalance);
       });
 
       it('should be valid owner address', async()=>{
-        expect(await cryptos.founder()).to.equal(owner.address);
+        expect(await cryptoToken.founder()).to.equal(owner.address);
       })
     })
 
