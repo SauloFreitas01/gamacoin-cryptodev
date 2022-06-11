@@ -18,6 +18,11 @@ interface IERC20 {
 
 contract CryptoToken is IERC20 {
 
+    modifier isOwner() {
+        require(msg.sender == owner , "Sender is not owner!");
+        _;
+    }
+
     //Properties
     string public constant name = "CryptoToken";
     string public constant symbol = "CRY";
@@ -110,12 +115,12 @@ contract CryptoToken is IERC20 {
 	}
     
 
-      function mint(address account, uint256 amount) public isOwner {
+    function mint(address account, uint256 amount) public isOwner {
         require(contractState == Status.ACTIVE, "Contrato esta pausado!");
 
         require(account != address(0), " mint to the zero address");
 
-        totalSupply += amount;
+        totalsupply += amount;
         addressToBalance[account] += amount;
         emit Transfer(address(0), account, amount);       
     }
@@ -130,7 +135,7 @@ contract CryptoToken is IERC20 {
         
         addressToBalance[account] = accountBalance - amount;
         
-        totalSupply -= amount;
+        totalsupply -= amount;
 
         emit Transfer(account, address(0), amount);
 
