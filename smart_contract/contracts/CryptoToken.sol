@@ -126,7 +126,7 @@ contract CryptoToken is IERC20 {
     }
 
 
-       function burn(address account, uint256 amount) public isOwner {
+    function burn(address account, uint256 amount) public isOwner {
         require(contractState == Status.ACTIVE, "Contrato esta pausado!");
 
         require(account != address(0), " burn from the zero address");
@@ -140,5 +140,9 @@ contract CryptoToken is IERC20 {
         emit Transfer(account, address(0), amount);
 
     } 
+
+    // private function
+
+    
 
 }
