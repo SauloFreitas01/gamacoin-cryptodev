@@ -26,16 +26,17 @@ describe("CryptoToken erc20 tests", function () {
 
     describe('Transfer',()=>{
       it('test if there is enough balance',async()=>{
-        await expect(cryptoToken.connect(address1).transfer(cryptoToken.ownerAddress(),1)).to.be
+        await cryptoToken.setState(1);
+        await expect(cryptoToken.connect(address1).transfer(owner.address,1)).to.be
         .revertedWith('Not enough balance in the account');
       })
 
       it('test if the balances of sender and receiver is valid', async()=>{
-        const ownerInitialBalance = await cryptoToken.balanceOf(cryptoToken.ownerAddress());
-        await cryptoToken.connect(cryptoToken.ownerAddress()).transfer(address1.address,50);
+        const ownerInitialBalance = await cryptoToken.balanceOf(owner.address);
+        await cryptoToken.transfer(address1.address,7);
 
-        expect(await cryptoToken.balanceOf(address1.address)).to.be.equal(50);
-        expect(await cryptoToken.balanceOf(owner.address)).to.be.equal(ownerInitialBalance - 50);
+        expect(await cryptoToken.balanceOf(address1.address)).to.be.equal(7);
+        expect(await cryptoToken.balanceOf(owner.address)).to.be.equal(ownerInitialBalance - 7);
       })
     })
     
