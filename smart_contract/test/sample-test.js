@@ -30,7 +30,7 @@ describe("CryptoToken erc20 tests", function () {
         .revertedWith('Not enough balance in the account');
       })
 
-      it('test if final balances are valid', async()=>{
+      it('test if the balances of sender and receiver is valid', async()=>{
         const ownerInitialBalance = await cryptoToken.balanceOf(cryptoToken.ownerAddress());
         await cryptoToken.connect(cryptoToken.ownerAddress()).transfer(address1.address,50);
 

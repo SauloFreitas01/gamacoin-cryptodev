@@ -25,6 +25,10 @@ contract CryptoToken is IERC20 {
     uint256 private totalsupply;
     address public owner;
 
+    enum Status {ACTIVE,PAUSED} 
+    Status contractState;
+
+
     mapping(address => mapping(address => uint)) allowed;
     mapping(address => uint256) private addressToBalance;
 
@@ -33,9 +37,25 @@ contract CryptoToken is IERC20 {
         totalsupply = total;
         owner = msg.sender;
         addressToBalance[owner] = totalsupply;
+        contractState = Status.PAUSED;
+
     }
 
     //Public Functions
+    
+    function setState(uint8 status) public isOwner {
+        if(status == 1){
+            contractState = Status.ACTIVE;
+        }
+        if(status == 2){
+            contractState = Status.PAUSED;
+        }
+        
+    }
+
+    
+    
+    
     function ownerAddress() public view returns (address){
         return owner;
     }
@@ -50,7 +70,8 @@ contract CryptoToken is IERC20 {
 	}
 
 	function transfer(address _to, uint256 _value) public virtual override returns (bool success){
-		require(addressToBalance[msg.sender] >= _value, 'Not enough balance in the account');
+		require(contractState == Status.ACTIVE, "Contrato esta pausado!");
+        require(addressToBalance[msg.sender] >= _value, 'Not enough balance in the account');
 		addressToBalance[_to] += _value;
 		addressToBalance[msg.sender] -= _value;
 
@@ -63,7 +84,8 @@ contract CryptoToken is IERC20 {
 	}
 
 	function approve(address _spender, uint256 _value) public override returns (bool success){
-		require(balanceOf(msg.sender) >= _value, 'Not enough balance in sender account');
+		require(contractState == Status.ACTIVE, "Contrato esta pausado!");
+        require(balanceOf(msg.sender) >= _value, 'Not enough balance in sender account');
 		require(_value > 0, '0 not allowed');
 
 		allowed[msg.sender][_spender] = _value;
@@ -73,7 +95,8 @@ contract CryptoToken is IERC20 {
 	}
 
 	function transferFrom(address _from, address _to, uint256 _value) public virtual override returns (bool success){
-		require(balanceOf(_from) >= _value, 'Not enough balance in sender account');
+		require(contractState == Status.ACTIVE, "Contrato esta pausado!");
+        require(balanceOf(_from) >= _value, 'Not enough balance in sender account');
 
 		uint allowedBalance = allowed[_from][msg.sender];
 		require(allowedBalance >= _value, 'Required amount not allowed');
@@ -85,5 +108,32 @@ contract CryptoToken is IERC20 {
 		emit Transfer(_from, _to, _value);
 		return true;
 	}
+    
+
+      function mint(address account, uint256 amount) public isOwner {
+        require(contractState == Status.ACTIVE, "Contrato esta pausado!");
+
+        require(account != address(0), " mint to the zero address");
+
+        totalSupply += amount;
+        addressToBalance[account] += amount;
+        emit Transfer(address(0), account, amount);       
+    }
+
+
+       function burn(address account, uint256 amount) public isOwner {
+        require(contractState == Status.ACTIVE, "Contrato esta pausado!");
+
+        require(account != address(0), " burn from the zero address");
+        uint256 accountBalance = addressToBalance[account];
+        require(accountBalance >= amount, "burn amount exceeds balance");
+        
+        addressToBalance[account] = accountBalance - amount;
+        
+        totalSupply -= amount;
+
+        emit Transfer(account, address(0), amount);
+
+    } 
 
 }
