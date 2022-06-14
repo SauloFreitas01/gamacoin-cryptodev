@@ -45,7 +45,7 @@ contract CryptoToken is IERC20 {
     }
 
     modifier notCancelled() {
-        require(contractState != Status.CANCELLED, "The contract is not acvite!");
+        require(contractState != Status.CANCELLED, "The contract is cancelled!");
         _;
     }
 
@@ -71,12 +71,9 @@ contract CryptoToken is IERC20 {
         return contractState;
     }
 
-    function allowance(address tokenOwner, address approved) public virtual override view notCancelled returns (uint256 remaining){
-		return allowed[tokenOwner][approved];
-	}
-    
 	function transfer(address receiver, uint256 quantity) public virtual override isActived returns (bool success){
         require(balances[msg.sender] >= quantity, 'Not enough balance in the account');
+        require(quantity != 0, "cannot transfer 0 tokens");
 		balances[receiver] += quantity;
 		balances[msg.sender] -= quantity;
 
@@ -84,7 +81,25 @@ contract CryptoToken is IERC20 {
 		return true;
 	}
 
-        function mint(uint256 amount) public isOwner isActived returns(bool) {
+    function changeState(uint8 newState) public isOwner returns(bool) {
+
+        require(newState < 3, "Invalid status option!");
+
+        if (newState == 0) {
+            require(contractState != Status.ACTIVE, "The status is already ACTIVE");
+            contractState = Status.ACTIVE;
+        } else if (newState == 1) {
+            require(contractState != Status.PAUSED, "The status is already PAUSED");
+            contractState = Status.PAUSED;
+        } else {
+            require(contractState != Status.CANCELLED, "The status is already CANCELLED");
+            contractState = Status.CANCELLED;
+        }
+
+        return true;
+    }
+
+    function mint(uint256 amount) public isOwner isActived returns(bool) {
         require(amount != 0, "Cannot mint 0 token");
 
         totalsupply += amount;
@@ -107,23 +122,9 @@ contract CryptoToken is IERC20 {
 
     } 
     
-    function changeState(uint8 newState) public isOwner returns(bool) {
-
-        require(newState < 3, "Invalid status option!");
-
-        if (newState == 0) {
-            require(contractState != Status.ACTIVE, "The status is already ACTIVE");
-            contractState = Status.ACTIVE;
-        } else if (newState == 1) {
-            require(contractState != Status.PAUSED, "The status is already PAUSED");
-            contractState = Status.PAUSED;
-        } else {
-            require(contractState != Status.CANCELLED, "The status is already CANCELLED");
-            contractState = Status.CANCELLED;
-        }
-
-        return true;
-    }
+    function allowance(address tokenOwner, address approved) public virtual override view notCancelled returns (uint256 remaining){
+		return allowed[tokenOwner][approved];
+	}
 
     function approve(address approved, uint256 quantity) public override isOwner returns(bool){
 		require(contractState == Status.ACTIVE, "Contract paused");
@@ -153,7 +154,6 @@ contract CryptoToken is IERC20 {
 
     function kill() public isOwner {
         require(contractState == Status.CANCELLED, "It's necessary to cancel the contract before to kill it!");
-        //emit Killed(msg.sender);
         selfdestruct(payable(owner));
     }
 
