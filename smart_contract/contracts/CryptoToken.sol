@@ -6,10 +6,10 @@ interface IERC20 {
     // Functions
     function totalSupply() external view returns(uint256);
     function balanceOf(address account) external view returns(uint256);
-    function approve(address approved, uint256 quantity) external returns(bool);
-    function allowance(address owner, address approved) external view returns(uint256);
+    // function approve(address approved, uint256 quantity) external returns(bool);
+    // function allowance(address owner, address approved) external view returns(uint256);
     function transfer(address receiver, uint256 amount) external returns(bool);
-    function transferFrom(address from, address to, uint256 amount) external returns (bool);
+    // function transferFrom(address from, address to, uint256 amount) external returns (bool);
 
     // Events
     event Transfer(address from, address to, uint256 value);
@@ -122,35 +122,35 @@ contract CryptoToken is IERC20 {
 
     } 
     
-    function allowance(address tokenOwner, address approved) public virtual override view notCancelled returns (uint256 remaining){
-		return allowed[tokenOwner][approved];
-	}
+    // function allowance(address tokenOwner, address approved) public virtual override view notCancelled returns (uint256 remaining){
+	// 	return allowed[tokenOwner][approved];
+	// }
 
-    function approve(address approved, uint256 quantity) public override isOwner returns(bool){
-		require(contractState == Status.ACTIVE, "Contract paused");
-        require(balanceOf(msg.sender) >= quantity, 'Not enough balance in sender account');
-		require(quantity > 0, 'Value not allowed');
+    // function approve(address approved, uint256 quantity) public override isOwner returns(bool){
+	// 	require(contractState == Status.ACTIVE, "Contract paused");
+    //     require(balanceOf(msg.sender) >= quantity, 'Not enough balance in sender account');
+	// 	require(quantity > 0, 'Value not allowed');
 
-		allowed[msg.sender][approved] = quantity;
+	// 	allowed[msg.sender][approved] = quantity;
 
-		emit Approval(msg.sender, approved, quantity);
-		return true;
-	}
+	// 	emit Approval(msg.sender, approved, quantity);
+	// 	return true;
+	// }
 
-	function transferFrom(address sender, address receiver, uint256 quantity) public virtual override isActived returns (bool success){
-		require(contractState == Status.ACTIVE, "Contract paused");
-        require(balanceOf(sender) >= quantity, 'Not enough balance in sender account');
+	// function transferFrom(address sender, address receiver, uint256 quantity) public virtual override isActived returns (bool success){
+	// 	require(contractState == Status.ACTIVE, "Contract paused");
+    //     require(balanceOf(sender) >= quantity, 'Not enough balance in sender account');
 
-		uint allowedBalance = allowed[sender][msg.sender];
-		require(allowedBalance >= quantity, 'Required amount not allowed');
-		balances[receiver] += quantity;
-		balances[sender] -= quantity;
+	// 	uint allowedBalance = allowed[sender][msg.sender];
+	// 	require(allowedBalance >= quantity, 'Required amount not allowed');
+	// 	balances[receiver] += quantity;
+	// 	balances[sender] -= quantity;
 
-		allowed[sender][msg.sender] -= quantity;
+	// 	allowed[sender][msg.sender] -= quantity;
 
-		emit Transfer(sender, receiver, quantity);
-		return true;
-	}
+	// 	emit Transfer(sender, receiver, quantity);
+	// 	return true;
+	// }
 
     function kill() public isOwner {
         require(contractState == Status.CANCELLED, "It's necessary to cancel the contract before to kill it!");
