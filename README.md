@@ -9,8 +9,9 @@ Este repositório consiste no trabalho conjunto do grupo 5 para produzir um MVP 
 * Ethers
 * Chai
 
+## Estrutura do projeto
 
-
+O projeto consiste na construção e teste de dois `Smart Contracts` distintos, criando um token conforme o padrão ERC20 e tendo sua compra e venda disponibilizada através de um contrato de uma máquina de venda, que permite a compra e venda do token além do reabastecimento de ambos tokens e ethers. Foi utilizado a ferramenta Chai para a realização de testes do código.
 
 
 
