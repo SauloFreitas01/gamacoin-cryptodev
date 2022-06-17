@@ -3,7 +3,7 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "./CryptoToken.sol";
 
-contract MyMachine {
+contract VendingMachine {
 
     // events
     event Bought(uint256 tokenAmount, uint256 gweiAmount);
@@ -12,8 +12,8 @@ contract MyMachine {
     // Properties
     address public owner;
     address public tokenAddress;
-    uint256 public purchasePrice;
-    uint256 public salePrice;
+    uint256 private purchasePrice;
+    uint256 private salePrice;
     
     mapping(address => uint) private tokenBalance;    
 
@@ -34,10 +34,27 @@ contract MyMachine {
     // 1 TOKEN NOSSO VALE 1 GWEI
     // 1,000 -> 0,001 = Mwei
 
+    // 5- reabastecer a máquina com token e ether
+    function restockToken(uint256 amount) public isOwner returns(bool) {
+        require(amount != 0, "cannot restock 0 token");
+        
+        uint256 balance = CryptoToken(tokenAddress).balanceOf(address(this));
+        require(amount <= balance, "insufficient balance to restock");
+
+        tokenBalance[address(this)] += amount;
+
+        return true;
+    }
+
+    function restockEther() payable public isOwner returns(bool) {
+
+        return true;
+    }
+
     // 3- comprar tokens com ether
     function buy() payable public returns(bool) {
         uint256 amountTobuy = msg.value;
-        uint256 balance = CryptoToken(tokenAddress).balanceOf(address(this));
+        uint256 balance = tokenBalance[address(this)];
         uint256 tokenValue = amountTobuy / purchasePrice;
         
         require(amountTobuy > 0, "You need to send some Ether");
@@ -69,23 +86,6 @@ contract MyMachine {
         return true;
     }
 
-    // 5- reabastecer a máquina com token e ether
-    function restockToken(uint256 amount) public isOwner returns(bool) {
-        require(amount != 0, "cannot restock 0 token");
-        
-        uint256 balance = CryptoToken(tokenAddress).balanceOf(address(this));
-        require(amount <= balance, "insufficient balance to restock");
-
-        tokenBalance[address(this)] += amount;
-
-        return true;
-    }
-
-    function restockEther() payable public isOwner returns(bool) {
-
-        return true;
-    }
-
     // 6- sacar saldo em ether
     function withdrawEther(uint256 amount) public isOwner returns(bool) {
         require(amount != 0, "cannot withdraw 0 ethers");
@@ -99,6 +99,7 @@ contract MyMachine {
     // 7- redefinir valor do token pra compra
     function resetPurchasePrice(uint256 value) public isOwner returns(bool) {
         require(value != 0, "cannot reset purchase price to 0");
+        require(value * 1 gwei != purchasePrice, "is the current price");
         purchasePrice = value * 1 gwei;
 
         return true;
@@ -107,13 +108,13 @@ contract MyMachine {
     // 8- redefinir valor do token pra venda
     function resetSalePrice(uint256 value) public isOwner returns(bool) {
         require(value != 0, "cannot reset sale price to 0");
+        require(value * 1 gwei != salePrice, "is the current price");
         salePrice = value * 1 gwei;
 
         return true;
     }
 
-
-    // funções de log
+     // funções de log
     function tokensQuantity() public view returns (uint256) {
         return tokenBalance[address(this)];
     }
@@ -121,4 +122,13 @@ contract MyMachine {
     function contractBalance() public view returns (uint256) {
         return address(this).balance;
     }
+
+    function getPurchasePrice() public view returns(uint256) {
+        return purchasePrice;
+    }
+    
+    function getSalePrice() public view returns(uint256) {
+        return salePrice;
+    }
+    
 }

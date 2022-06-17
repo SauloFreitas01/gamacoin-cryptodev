@@ -6,10 +6,7 @@ interface IERC20 {
     // Functions
     function totalSupply() external view returns(uint256);
     function balanceOf(address account) external view returns(uint256);
-    // function approve(address approved, uint256 quantity) external returns(bool);
-    // function allowance(address owner, address approved) external view returns(uint256);
     function transfer(address receiver, uint256 amount) external returns(bool);
-    // function transferFrom(address from, address to, uint256 amount) external returns (bool);
 
     // Events
     event Transfer(address from, address to, uint256 value);

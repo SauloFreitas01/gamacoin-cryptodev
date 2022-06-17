@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ethereum-unit-converter": "^0.0.17",
     "hardhat": "^2.9.9"
   },
   "devDependencies": {

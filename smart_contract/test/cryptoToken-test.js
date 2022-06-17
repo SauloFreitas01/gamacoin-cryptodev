@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("CryptoToken erc20 tests", function () {
+describe("CryptoToken erc20 tests", () => {
 
   let CryptoToken, cryptoToken;
 
