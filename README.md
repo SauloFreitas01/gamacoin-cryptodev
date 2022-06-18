@@ -38,7 +38,7 @@ Suas principais características consistem em:
 * Consulta de saldo de tokens e ethers da máquina.
 ## Testes
 
-Localizado em `/smart_contract/test/`, estes testes foram desenvolvidos para garantir que o produto desenvolvivdo cumpra os critérios estabelecidos e apresente o comportamento desejado e se obtenha maior confiança e controle na aplicação. 
+Localizado em `/smart_contract/test/`, estes testes foram desenvolvidos para garantir que o produto desenvolvido cumpra os critérios estabelecidos e apresente o comportamento desejado e se obtenha maior confiança e controle na aplicação. 
 
 Alguns dos itens abordados dentro do escopo de teste são:
 
@@ -54,5 +54,4 @@ Alguns dos itens abordados dentro do escopo de teste são:
 
 ## Utilizando a aplicação
 Optou-se a utilização da IDE Remix para a interação com a aplicação desenvolvida, devido a sua integração de interface visual e ambiente de desenvolvimento de fácil utilização, para fazer uso desse recurso, acesse  https://remix.ethereum.org e copie a pasta smart_contracts deste repositório para o espaço de trabalho da IDE, Compile ambos contratos, realizando primeiro o deploy do contrato de token, informando a quantidade de tokens a serem criados inicialmente. É preciso obter o endereço deste contrato para inicializar o contrato de máquina de vendas. Feito ambos deploys, é possível interagir com o contrato através da interface gráfica do Remix para estudar seu comportamento.
-
 
