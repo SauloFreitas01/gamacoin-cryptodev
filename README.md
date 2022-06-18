@@ -16,9 +16,9 @@ Este repositório consiste no trabalho conjunto do grupo 5 para produzir um MVP 
 
 ## Estrutura do projeto
 
-O projeto consiste na construção e teste de dois `Smart Contracts` distintos, criando um token conforme o padrão ERC20 e tendo sua compra e venda disponibilizada através de um contrato de uma máquina de venda, que permite a compra e venda do token além do reabastecimento de ambos tokens e ethers. Foi utilizado a ferramenta Chai para a realização de testes do código. O código está organizado da seguinte forma.
+O projeto consiste na construção e teste de dois `Smart Contracts` distintos, criando um token conforme o padrão ERC20 e tendo sua compra e venda disponibilizada através de um contrato de uma máquina de venda, que permite a compra e venda do token além do reabastecimento de ambos tokens e ethers. Foi utilizado a ferramenta Chai para a realização de testes do código. O código está organizado da seguinte forma:
 
-Dentro da pasta smart_contracts estão localizados o arquivo CryptoToken.sol, onde está implementado o Token, e VendingMachine.sol, onde está implementado o contrato de máquina de vendas. Os testes estão implementados dentro da pasta test, com o nome cryptoToken-test.js.
+Dentro da pasta smart_contracts estão localizados o arquivo CryptoToken.sol, onde está implementado o Token, e VendingMachine.sol, onde está implementado o contrato de máquina de vendas. Os testes estão implementados dentro da pasta test.
 
 ## Contrato de Token
 O Token deste projeto foi desenvolvido sob o nome CryptoToken dentro do diretório `/smart_contract/contracts/` e tendo como base os conhecimentos obtidos nas aulas assistidas e conforme o padrão ERC20, porém, dado ao escopo do projeto, nem todos as funcionalidades do padrão foram utilizadas. 
