@@ -43,7 +43,7 @@ contract CryptoToken is IERC20 {
     }
 
     modifier isActived() {
-        require(contractState == Status.ACTIVE, "The contract is not acvite!");
+        require(contractState == Status.ACTIVE, "The contract is not active!");
         _;
     }
 
@@ -85,6 +85,8 @@ contract CryptoToken is IERC20 {
 	}
 
     function transferFrom(address sender, address receiver, uint256 quantity) public override isActived returns(bool) {
+        require(balances[sender] >= quantity, 'Not enough balance in the account');
+        require(quantity != 0, "cannot transfer 0 tokens");
         balances[receiver] = balances[receiver].add(quantity);
         balances[sender] = balances[sender].sub(quantity);
 

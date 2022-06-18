@@ -3,7 +3,7 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "./CryptoToken.sol";
 
-contract MyMachine {
+contract VendingMachine {
 
     // Libs
     using Math for uint256;
@@ -31,7 +31,7 @@ contract MyMachine {
     }
 
     modifier isActived() {
-        require(contractState == Status.ACTIVE, "The contract is not acvite!");
+        require(contractState == Status.ACTIVE, "The contract is not active!");
         _;
     }
 
