@@ -289,12 +289,6 @@ describe("vending machine tests", () => {
         it("checking if the value of the token for purchase is changing to 0", async () => {
             await expect(vendingMachine.resetPurchasePrice(0)).to.be.revertedWith("cannot reset purchase price to 0")
         })
-        
-        // NÃO TEM ESSE REQUIRE
-        // it("checking if it is changing to the current value of the token value for purchase", async () => {
-        //     // await vendingMachine.resetPurchasePrice(1)
-        //     await expect(vendingMachine.resetPurchasePrice(1000000000)).to.be.revertedWith("is the current price")
-        // })
     })
     
     describe("ResetSalePrice", () => {
@@ -310,12 +304,6 @@ describe("vending machine tests", () => {
         it("checking if the value of the token for sale is changing to 0", async () => {
             await expect(vendingMachine.resetSalePrice(0)).to.be.revertedWith("cannot reset sale price to 0")
         })
-        
-        // NÃO TEM ESSE REQUIRE
-        // it("checking if it is changing to the current value of the token value for sale", async () => {
-        //     // await vendingMachine.resetSalePrice(1)
-        //     await expect(vendingMachine.resetSalePrice(1000000000)).to.be.revertedWith("is the current price")
-        // })
     })
 
     describe("ChangeState Function", () => {
@@ -341,6 +329,56 @@ describe("vending machine tests", () => {
             await cryptoToken.changeState(2)
             await expect(cryptoToken.changeState(2)).to.be.revertedWith("The status is already CANCELLED")
         })
+    })
+
+    describe("IsOwner Modifier", () => {
+        it("checking owner permissions", async () => {
+            const etherAmount = convert(1000, "gwei", "ether")
+
+            expect(vendingMachine.connect(address1).restockToken(100)).to.be.revertedWith("Sender is not owner!")
+            expect(vendingMachine.connect(address1).restockEther({ value: ethers.utils.parseEther(etherAmount)})).to.be.revertedWith("Sender is not owner!")
+            expect(vendingMachine.connect(address1).withdrawEther(100000)).to.be.revertedWith("Sender is not owner!")
+            expect(vendingMachine.connect(address1).resetPurchasePrice(100000)).to.be.revertedWith("Sender is not owner!")
+            expect(vendingMachine.connect(address1).resetSalePrice(100000)).to.be.revertedWith("Sender is not owner!")
+            expect(vendingMachine.connect(address1).changeState(2)).to.be.revertedWith("Sender is not owner!")
+            expect(vendingMachine.connect(address1).kill()).to.be.revertedWith("Sender is not owner!")
+        })
+    })
+
+    describe("IsActive Modifier", () => {
+        it("checking if status is active", async () => {
+            const etherAmount = convert(1000, "gwei", "ether")
+            await vendingMachine.changeState(1)
+            
+            await expect(vendingMachine.buy({ value: ethers.utils.parseEther(etherAmount)})).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.connect(address1).sell(100)).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.restockToken(1000)).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.restockEther({ value: ethers.utils.parseEther(etherAmount)})).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.withdrawEther(10)).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.resetPurchasePrice(1000)).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.resetSalePrice(1000)).to.be.revertedWith("The contract is not active!")
+            
+            await vendingMachine.changeState(2)
+            
+            await expect(vendingMachine.buy({ value: ethers.utils.parseEther(etherAmount)})).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.connect(address1).sell(100)).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.restockToken(1000)).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.restockEther({ value: ethers.utils.parseEther(etherAmount)})).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.withdrawEther(10)).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.resetPurchasePrice(1000)).to.be.revertedWith("The contract is not active!")
+            await expect(vendingMachine.resetSalePrice(1000)).to.be.revertedWith("The contract is not active!")
+        })
+    })
+
+    describe("NotCancelled", () => {
+        it("checking that the status is not canceled", async () => {
+            await vendingMachine.changeState(2)
+            
+            await expect(vendingMachine.tokensQuantity()).to.be.revertedWith("The contract is cancelled!")
+            await expect(vendingMachine.contractBalance()).to.be.revertedWith("The contract is cancelled!")
+            await expect(vendingMachine.purchasePrice()).to.be.revertedWith("The contract is cancelled!")
+            await expect(vendingMachine.salePrice()).to.be.revertedWith("The contract is cancelled!")
+        })  
     })
 
     describe("Kill Function", () => {
