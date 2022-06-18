@@ -74,7 +74,7 @@ contract CryptoToken is IERC20 {
     }
 
     // 1- transferir saldos entre carteiras
-	function transfer(address receiver, uint256 quantity) public virtual override isActived returns(bool) {
+	function transfer(address receiver, uint256 quantity) public override isActived returns(bool) {
         require(balances[msg.sender] >= quantity, 'Not enough balance in the account');
         require(quantity != 0, "cannot transfer 0 tokens");
 		balances[receiver] = balances[receiver].add(quantity);
