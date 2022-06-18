@@ -7,6 +7,10 @@ interface IERC20 {
     function totalSupply() external view returns(uint256);
     function balanceOf(address account) external view returns(uint256);
     function transfer(address receiver, uint256 amount) external returns(bool);
+    function transferFrom(address sender, address receiver, uint256 quantity) external returns(bool);
+    function changeState(uint8 newState) external returns(bool);
+    function mint(uint256 amount) external returns(bool);
+    function burn( uint256 amount) external returns(bool);
 
     // Events
     event Transfer(address from, address to, uint256 value);
@@ -16,18 +20,20 @@ interface IERC20 {
 
 contract CryptoToken is IERC20 {
 
+    // Libs
+    using Math for uint256;
+
     // Enums
     enum Status { ACTIVE, PAUSED, CANCELLED }
     
     //Properties
     string public constant name = "CryptoToken";
     string public constant symbol = "CRY";
-    uint8 public constant decimals = 9;  //Default dos exemplos é sempre 18
-    uint256 private totalsupply;
+    uint8 public constant decimals = 9;
+    uint256 private totalSupply_;
     address public owner;
     Status contractState;
 
-    mapping(address => mapping(address => uint)) allowed;
     mapping(address => uint256) private balances;
 
     // modifiers
@@ -47,20 +53,19 @@ contract CryptoToken is IERC20 {
     }
 
     constructor(uint256 total) {
-        totalsupply = total;
+        totalSupply_ = total;
         owner = msg.sender;
-        balances[owner] = totalsupply;
+        balances[owner] = totalSupply_;
         contractState = Status.ACTIVE;
 
     }
 
     //Public Functions
-
     function totalSupply() public override view notCancelled returns(uint256) {
-        return totalsupply;
+        return totalSupply_;
     }
 
-    function balanceOf(address tokenOwner) public view override notCancelled returns (uint256 balance){
+    function balanceOf(address tokenOwner) public view override notCancelled returns(uint256){
 		return balances[tokenOwner];
 	}
 
@@ -68,17 +73,27 @@ contract CryptoToken is IERC20 {
         return contractState;
     }
 
-	function transfer(address receiver, uint256 quantity) public virtual override isActived returns (bool success){
+    // 1- transferir saldos entre carteiras
+	function transfer(address receiver, uint256 quantity) public virtual override isActived returns(bool) {
         require(balances[msg.sender] >= quantity, 'Not enough balance in the account');
         require(quantity != 0, "cannot transfer 0 tokens");
-		balances[receiver] += quantity;
-		balances[msg.sender] -= quantity;
+		balances[receiver] = balances[receiver].add(quantity);
+		balances[msg.sender] = balances[msg.sender].sub(quantity);
 
 		emit Transfer(msg.sender, receiver, quantity);
 		return true;
 	}
 
-    function changeState(uint8 newState) public isOwner returns(bool) {
+    function transferFrom(address sender, address receiver, uint256 quantity) public override isActived returns(bool) {
+        balances[receiver] = balances[receiver].add(quantity);
+        balances[sender] = balances[sender].sub(quantity);
+
+        emit Transfer(sender, receiver, quantity);
+        return true;
+    }
+
+    // 2- mudar o estado do contrato
+    function changeState(uint8 newState) public override isOwner returns(bool) {
 
         require(newState < 3, "Invalid status option!");
 
@@ -96,62 +111,45 @@ contract CryptoToken is IERC20 {
         return true;
     }
 
-    function mint(uint256 amount) public isOwner isActived returns(bool) {
+    // 3- cunhar tokens
+    function mint(uint256 amount) public override isOwner isActived returns(bool) {
         require(amount != 0, "Cannot mint 0 token");
 
-        totalsupply += amount;
-        balances[owner] += amount;
+        totalSupply_ = totalSupply_.add(amount);
+        balances[owner] = balances[owner].add(amount);
 
         return true;          
     }
 
-
-    function burn( uint256 amount) public isOwner isActived returns(bool) {
-        require(amount != 0, "Cannot mint 0 token");
-        uint256 accountBalance = balances[owner];
-        require(accountBalance >= amount, "burn amount exceeds balance");
+    // 4- queimar tokens
+    function burn( uint256 amount) public override isOwner isActived returns(bool) {
+        require(amount != 0, "Cannot burn 0 token");
+        require(balances[owner] >= amount, "burn amount exceeds balance");
         
-        balances[owner] = accountBalance - amount;
-        
-        totalsupply -= amount;
+        balances[owner] = balances[owner].sub(amount);
+        totalSupply_ = totalSupply_.sub(amount);
 
        return true;
 
     } 
-    
-    // function allowance(address tokenOwner, address approved) public virtual override view notCancelled returns (uint256 remaining){
-	// 	return allowed[tokenOwner][approved];
-	// }
 
-    // function approve(address approved, uint256 quantity) public override isOwner returns(bool){
-	// 	require(contractState == Status.ACTIVE, "Contract paused");
-    //     require(balanceOf(msg.sender) >= quantity, 'Not enough balance in sender account');
-	// 	require(quantity > 0, 'Value not allowed');
-
-	// 	allowed[msg.sender][approved] = quantity;
-
-	// 	emit Approval(msg.sender, approved, quantity);
-	// 	return true;
-	// }
-
-	// function transferFrom(address sender, address receiver, uint256 quantity) public virtual override isActived returns (bool success){
-	// 	require(contractState == Status.ACTIVE, "Contract paused");
-    //     require(balanceOf(sender) >= quantity, 'Not enough balance in sender account');
-
-	// 	uint allowedBalance = allowed[sender][msg.sender];
-	// 	require(allowedBalance >= quantity, 'Required amount not allowed');
-	// 	balances[receiver] += quantity;
-	// 	balances[sender] -= quantity;
-
-	// 	allowed[sender][msg.sender] -= quantity;
-
-	// 	emit Transfer(sender, receiver, quantity);
-	// 	return true;
-	// }
-
+    // Kill
     function kill() public isOwner {
         require(contractState == Status.CANCELLED, "It's necessary to cancel the contract before to kill it!");
         selfdestruct(payable(owner));
     }
 
+}
+
+library Math {
+    function add(uint256 a, uint256 b) internal pure returns(uint256) {
+        uint256 c = a + b;
+        assert(c >= a);
+        return c;
+    }
+
+    function sub(uint256 a, uint256 b) internal pure returns(uint256) {
+        assert (b <= a);
+        return a - b;
+    }
 }
