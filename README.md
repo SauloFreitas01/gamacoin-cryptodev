@@ -28,6 +28,35 @@ As principais funcionalidades consistem em:
 * Criação (mint) e destruição (burn) de tokens.
 * Destruição do contrato.
 
+### 🚀 Instruções de Instalação e operação
+
+Primeiro passo - clonar o repositorio
+```shell
+git clone https://github.com/SauloFreitas01/gamacoin-cryptodev
+```
+
+Segundo passo - entrar na pasta ```gamacoin-cryptodev```, depois na pasta ```smart-contract``` e instalar as dependências
+```shell
+cd gamacoin-cryptodev
+cd smart-contract
+npm install 
+```
+
+Terceiro passo - abrir o interpretador de texto (de preferência o VSCode)
+```shell
+code .
+```
+
+Quarto passo - no terminal do VSCode compila os arquivos
+```shell
+npx hardhat compile
+```
+
+Quinto passo - no terminal do VSCode rodar os testes
+```shell
+npx hardhat test
+```
+
 ## Contrato de Máquina de vendas
 Este contrato se encontra  em `/smart_contract/contracts/` sob o nome VendingMachine.sol, utilizando os conceitos praticados nas aulas do criptodev para viabilizar a compra e venda do token desenvolvido pelo grupo.
 
