@@ -28,35 +28,6 @@ As principais funcionalidades consistem em:
 * Criação (mint) e destruição (burn) de tokens.
 * Destruição do contrato.
 
-### 🚀 Instruções de Instalação e operação
-
-Primeiro passo - clonar o repositorio
-```shell
-git clone https://github.com/SauloFreitas01/gamacoin-cryptodev
-```
-
-Segundo passo - entrar na pasta ```gamacoin-cryptodev```, depois na pasta ```smart-contract``` e instalar as dependências
-```shell
-cd gamacoin-cryptodev
-cd smart-contract
-npm install 
-```
-
-Terceiro passo - abrir o interpretador de texto (de preferência o VSCode)
-```shell
-code .
-```
-
-Quarto passo - no terminal do VSCode compila os arquivos
-```shell
-npx hardhat compile
-```
-
-Quinto passo - no terminal do VSCode rodar os testes
-```shell
-npx hardhat test
-```
-
 ## Contrato de Máquina de vendas
 Este contrato se encontra  em `/smart_contract/contracts/` sob o nome VendingMachine.sol, utilizando os conceitos praticados nas aulas do criptodev para viabilizar a compra e venda do token desenvolvido pelo grupo.
 
@@ -85,4 +56,32 @@ Alguns dos itens abordados dentro do escopo de teste são:
 
 ## Utilizando a aplicação
 Optou-se a utilização da IDE Remix para a interação com a aplicação desenvolvida, devido a sua integração de interface visual e ambiente de desenvolvimento de fácil utilização, para fazer uso desse recurso, acesse  https://remix.ethereum.org e copie a pasta smart_contracts deste repositório para o espaço de trabalho da IDE, Compile ambos contratos, realizando primeiro o deploy do contrato de token, informando a quantidade de tokens a serem criados inicialmente. É preciso obter o endereço deste contrato para inicializar o contrato de máquina de vendas. Feito ambos deploys, é possível interagir com o contrato através da interface gráfica do Remix para estudar seu comportamento.
+
+## 🚀 Instruções de Instalação e operação
+Primeiro passo - clonar o repositorio
+```shell
+git clone https://github.com/SauloFreitas01/gamacoin-cryptodev
+```
+
+Segundo passo - entrar na pasta ```gamacoin-cryptodev```, depois na pasta ```smart-contract``` e instalar as dependências
+```shell
+cd gamacoin-cryptodev
+cd smart-contract
+npm install 
+```
+
+Terceiro passo - abrir o interpretador de texto (de preferência o VSCode)
+```shell
+code .
+```
+
+Quarto passo - no terminal do VSCode compila os arquivos
+```shell
+npx hardhat compile
+```
+
+Quinto passo - no terminal do VSCode rodar os testes
+```shell
+npx hardhat test
+```
 
