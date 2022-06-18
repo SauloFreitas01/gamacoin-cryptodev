@@ -3,9 +3,9 @@
 Este repositório consiste no trabalho conjunto do grupo 5 para produzir um MVP de uma aplicação de _Vending Machine_, que realiza a compra e venda de tokens ERC20 desenvolvidos pelo grupo. Para isto, foram desenvolvidos um conjunto de  `Smart Contracts` em linguagem `Solidity`.
 
 ## Integrantes
-* Caio Moraes
-* Richard Silva
-* Saulo Freitas
+* Caio Moraes (https://github.com/caioDesenvMoraes)
+* Richard Silva (https://github.com/RichSilva)
+* Saulo Freitas (https://github.com/SauloFreitas01)
 
 ## Tecnologias utilizadas.
 * Linguagem Solidity.
