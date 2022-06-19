@@ -66,10 +66,10 @@ Primeiro passo - clonar o repositorio
 git clone https://github.com/SauloFreitas01/gamacoin-cryptodev
 ```
 
-Segundo passo - entrar na pasta ```gamacoin-cryptodev```, depois na pasta ```smart-contract``` e instalar as dependências
+Segundo passo - entrar na pasta ```gamacoin-cryptodev```, depois na pasta ```smart_contract``` e instalar as dependências
 ```shell
 cd gamacoin-cryptodev
-cd smart-contract
+cd smart_contract
 npm install 
 ```
 
